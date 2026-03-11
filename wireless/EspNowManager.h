@@ -22,7 +22,7 @@ class EspNowManager {
     unsigned long apStartTime = 0;
     const unsigned long apDuration = 60000;
 
-    int LED_PIN = 2;          // GPIO2 / D4 on WeMos D1 Mini
+    int LED_PIN = 16;          // GPIO2 / D4 on WeMos D1 Mini
     int INTERVAL = 500;      // Toggle interval in milliseconds
 
     unsigned long previousMillis = 0;  // Store last toggle time

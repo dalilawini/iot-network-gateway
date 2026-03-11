@@ -24,12 +24,16 @@ void EspNowManager::update() {
   if (digitalRead(_buttonPin) == LOW && !apMode) {
     delay(300);
     startAP();
+  }
+
+  if(apMode){
     toggleLed();
   }
 
   if (apMode && millis() - apStartTime > apDuration) {
 
     Serial.println("AP timeout");
+    digitalWrite(LED_PIN, HIGH);     // Start with LED OFF (active LOW)
 
     WiFi.softAPdisconnect(true);
     WiFi.mode(WIFI_OFF);
@@ -74,6 +78,7 @@ void EspNowManager::onStationConnected(const WiFiEventSoftAPModeStationConnected
   Serial.printf("MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
   evt.mac[0], evt.mac[1], evt.mac[2],
   evt.mac[3], evt.mac[4], evt.mac[5]);
+  digitalWrite(16, LOW);     // Start with LED OFF (active LOW)
 
   EspNowManager manager(0);   // temporary object to call method
   manager.startEspNow();
@@ -84,6 +89,7 @@ void EspNowManager::onDataRecv(uint8_t *mac, uint8_t *incomingData, uint8_t len)
   Serial.printf("Data from %02X:%02X:%02X:%02X:%02X:%02X\n",
   mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 }
+
 void EspNowManager::toggleLed(){
     unsigned long currentMillis = millis();
 
