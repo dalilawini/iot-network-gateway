@@ -36,6 +36,9 @@ jobs:
           arduino-cli lib install lvgl@9.4.0
           arduino-cli lib install XPT2046_Touchscreen
           arduino-cli lib install TFT_eSPI
+      - name: Setup LVGL config
+        run: |
+          cp ~/Arduino/libraries/lvgl/lv_conf_template.h ./lv_conf.h
       - name: Compile project
         run: |
           arduino-cli compile --fqbn esp32:esp32:esp32 --build-property compiler.cpp.extra_flags="-Iwireless -Idisplay -Iui"   -v .
