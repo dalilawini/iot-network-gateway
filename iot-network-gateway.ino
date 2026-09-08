@@ -4,6 +4,7 @@
 #include "screens.c"
 #include "styles.c"
 #include "ui.c"
+#include "ui_image_sun2.c"
 
 
 #include "EspNowManager.h"
@@ -12,7 +13,7 @@
 //EspNowManager espManager(0);
 DisplayManager displayManager;
 void setup() {
-
+Serial.begin(115200);
  // espManager.begin();
  displayManager.setup();
 }

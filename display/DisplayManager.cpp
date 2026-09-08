@@ -72,7 +72,7 @@ void DisplayManager::touchscreen_read(lv_indev_t *indev, lv_indev_data_t *data)
     }
 }
 
-void DisplayManager::action_scan(lv_event_t * e) {
+void action_scan(lv_event_t * e) {
     Serial.println("Scan button pressed");
 
     // TODO: your logic here

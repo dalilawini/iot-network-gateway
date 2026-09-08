@@ -17,11 +17,9 @@ enum ScreensEnum {
 
 typedef struct _objects_t {
     lv_obj_t *main;
-    lv_obj_t *obj0;
     lv_obj_t *set_value;
     lv_obj_t *temperature;
     lv_obj_t *humidity;
-    lv_obj_t *sun2;
 } objects_t;
 
 extern objects_t objects;
