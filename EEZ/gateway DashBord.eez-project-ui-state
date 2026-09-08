@@ -1,5 +1,6 @@
 {
   "navigation": {
+    "selectedUserPageObject": "[gateway DashBord.eez-project]:/userPages/0",
     "subnavigationSelectedItems": {}
   },
   "layoutModel": {
@@ -188,6 +189,18 @@
               "enableDeleteWhenEmpty": false,
               "enableClose": false,
               "children": [
+                {
+                  "type": "tab",
+                  "id": "#e0e0684b-9e67-44e2-8160-7ba430f61cbc",
+                  "name": "Settings",
+                  "component": "editor",
+                  "config": {
+                    "objectPath": "[gateway DashBord.eez-project]:/settings",
+                    "subObjectPath": "[gateway DashBord.eez-project]:/settings",
+                    "permanent": false
+                  },
+                  "icon": "material:settings"
+                },
                 {
                   "type": "tab",
                   "id": "#9c5aa37a-0013-455a-8aac-71c419ec7663",

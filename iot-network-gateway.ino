@@ -12,7 +12,7 @@
 //EspNowManager espManager(0);
 DisplayManager displayManager;
 void setup() {
-
+Serial.begin(115200);
  // espManager.begin();
  displayManager.setup();
 }
