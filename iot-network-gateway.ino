@@ -1,24 +1,30 @@
 #include "EspNowManager.cpp"
-#include "DisplayManager.cpp"
+#include "sensorData.cpp"
+/**#include "DisplayManager.cpp"
 #include "images.c"
 #include "screens.c"
 #include "styles.c"
 #include "ui.c"
+#include "ui_image_sun2.c"**/
 
 
 #include "EspNowManager.h"
-#include "DisplayManager.h"
+#include "SensorData.h"
 
-//EspNowManager espManager(0);
-DisplayManager displayManager;
+//#include "DisplayManager.h"
+
+EspNowManager espManager(0);
+SensorData sensorData;
+//DisplayManager displayManager;
 void setup() {
-
- // espManager.begin();
- displayManager.setup();
+ espManager.begin();
+ //displayManager.setup();
 }
 
 void loop() {
-  displayManager.update();
-  //espManager.update();
+  //displayManager.update();
+  espManager.update(sensorData);
+
+
 
 }

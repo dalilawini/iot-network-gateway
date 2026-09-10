@@ -27,23 +27,111 @@ void create_screen_main() {
     objects.main = obj;
     lv_obj_set_pos(obj, 0, 0);
     lv_obj_set_size(obj, 320, 240);
+    lv_obj_set_style_bg_color(obj, lv_color_hex(0xff018f3c), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     {
         lv_obj_t *parent_obj = obj;
         {
-            lv_obj_t *obj = lv_button_create(parent_obj);
-            lv_obj_set_pos(obj, 86, 70);
-            lv_obj_set_size(obj, 100, 50);
-           // lv_obj_add_event_cb(obj, action_scan, LV_EVENT_PRESSED, (void *)0);
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            objects.obj0 = obj;
+            lv_obj_set_pos(obj, 5, 4);
+            lv_obj_set_size(obj, 191, 185);
+            lv_obj_set_style_bg_color(obj, lv_color_hex(0xffcbfffd), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_bg_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+            {
+                lv_obj_t *parent_obj = obj;
+                {
+                    // set_value
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    objects.set_value = obj;
+                    lv_obj_set_pos(obj, 49, 137);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_label_set_text(obj, "set value");
+                }
+                {
+                    lv_obj_t *obj = lv_line_create(parent_obj);
+                    lv_obj_set_pos(obj, 31, 54);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    static lv_point_precise_t line_points[] = {
+                        { 0, 0 },
+                        { 0, 75 },
+                        { 0, 75 },
+                        { 100, 75 },
+                        { 100, 0 },
+                        { 0, 0 }
+                    };
+                    lv_line_set_points(obj, line_points, 6);
+                    lv_line_set_y_invert(obj, true);
+                    lv_obj_set_style_line_width(obj, 3, LV_PART_MAIN | LV_STATE_DEFAULT);
+                }
+                {
+                    lv_obj_t *obj = lv_line_create(parent_obj);
+                    lv_obj_set_pos(obj, 31, 4);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    static lv_point_precise_t line_points[] = {
+                        { 0, 0 },
+                        { 50, 50 },
+                        { 0, 0 },
+                        { 100, 0 },
+                        { 100, 0 },
+                        { 50, 50 }
+                    };
+                    lv_line_set_points(obj, line_points, 6);
+                    lv_line_set_y_invert(obj, true);
+                    lv_obj_set_style_line_width(obj, 3, LV_PART_MAIN | LV_STATE_DEFAULT);
+                }
+                {
+                    lv_obj_t *obj = lv_arc_create(parent_obj);
+                    lv_obj_set_pos(obj, -6, -11);
+                    lv_obj_set_size(obj, 174, 177);
+                    lv_arc_set_value(obj, 25);
+                }
+                {
+                    // Temperature
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    objects.temperature = obj;
+                    lv_obj_set_pos(obj, 60, 82);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_label_set_text(obj, "Temp");
+                }
+                {
+                    // humidity
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    objects.humidity = obj;
+                    lv_obj_set_pos(obj, 70, 29);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_label_set_text(obj, "Hu");
+                }
+            }
+        }
+        {
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            lv_obj_set_pos(obj, 201, 4);
+            lv_obj_set_size(obj, 115, 185);
             {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    lv_obj_set_pos(obj, 0, 0);
+                    lv_obj_set_pos(obj, 40, 54);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-                    lv_label_set_text(obj, "Scan");
+                    lv_label_set_text(obj, "38 ");
+                }
+                {
+                    // sun2
+                    lv_obj_t *obj = lv_image_create(parent_obj);
+                    objects.sun2 = obj;
+                    lv_obj_set_pos(obj, 50, -15);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_image_set_src(obj, &img_sun2);
+                    lv_obj_set_style_image_recolor(obj, lv_color_hex(0xffeee6e6), LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_image_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
                 }
             }
+        }
+        {
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            lv_obj_set_pos(obj, 5, 194);
+            lv_obj_set_size(obj, 311, 42);
         }
     }
     

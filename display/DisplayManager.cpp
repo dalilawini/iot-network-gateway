@@ -13,7 +13,7 @@ void DisplayManager::setup()
     lv_init();
 
     // Logging
-    lv_log_register_print_cb(log_print);
+    //lv_log_register_print_cb(log_print);
 
     // SPI
     touchscreenSpi.begin(XPT2046_CLK, XPT2046_MISO, XPT2046_MOSI, XPT2046_CS);
@@ -72,7 +72,7 @@ void DisplayManager::touchscreen_read(lv_indev_t *indev, lv_indev_data_t *data)
     }
 }
 
-void DisplayManager::action_scan(lv_event_t * e) {
+void action_scan(lv_event_t * e) {
     Serial.println("Scan button pressed");
 
     // TODO: your logic here

@@ -1,5 +1,7 @@
 {
   "navigation": {
+    "selectedUserPageObject": "[gateway DashBord.eez-project]:/userPages/0",
+    "selectedBitmapObject": "[gateway DashBord.eez-project]:/bitmaps/0",
     "subnavigationSelectedItems": {}
   },
   "layoutModel": {
@@ -20,6 +22,7 @@
           },
           {
             "type": "border",
+            "selected": 2,
             "size": 240,
             "location": "right",
             "children": [
@@ -67,6 +70,7 @@
           },
           {
             "type": "border",
+            "selected": 0,
             "location": "bottom",
             "children": [
               {
@@ -184,10 +188,23 @@
             {
               "type": "tabset",
               "id": "EDITORS",
-              "weight": 65,
+              "weight": 58.55852317360566,
+              "selected": 1,
               "enableDeleteWhenEmpty": false,
               "enableClose": false,
               "children": [
+                {
+                  "type": "tab",
+                  "id": "#b1d0b434-592a-4fe5-86c0-869b8e3b1bb8",
+                  "name": "Settings",
+                  "component": "editor",
+                  "config": {
+                    "objectPath": "[gateway DashBord.eez-project]:/settings",
+                    "subObjectPath": "[gateway DashBord.eez-project]:/settings",
+                    "permanent": false
+                  },
+                  "icon": "material:settings"
+                },
                 {
                   "type": "tab",
                   "id": "#9c5aa37a-0013-455a-8aac-71c419ec7663",
@@ -205,12 +222,12 @@
             {
               "type": "row",
               "id": "#c673260c-33fa-4b45-8ab5-277c24612a87",
-              "weight": 20,
+              "weight": 26.441476826394343,
               "children": [
                 {
                   "type": "tabset",
                   "id": "#a05fc689-06a6-4b22-bd95-45b2a3bc26ab",
-                  "weight": 2,
+                  "weight": 1.88135593220339,
                   "children": [
                     {
                       "type": "tab",
@@ -225,7 +242,7 @@
                 {
                   "type": "tabset",
                   "id": "#5b9f1688-73e1-4569-a193-999070e2d0fa",
-                  "weight": 1,
+                  "weight": 1.11864406779661,
                   "children": [
                     {
                       "type": "tab",
@@ -611,7 +628,8 @@
                       "component": "bitmaps",
                       "enableClose": false
                     }
-                  ]
+                  ],
+                  "active": true
                 },
                 {
                   "type": "tabset",
@@ -1049,11 +1067,19 @@
   "objects": {
     "[gateway DashBord.eez-project]:/userPages/0[flow-state]": {
       "selectionFront": {},
-      "selectionBack": {},
+      "selectionBack": {
+        "0": {
+          "0": {
+            "0": {},
+            "1": {}
+          },
+          "1": {}
+        }
+      },
       "transform": {
         "translate": {
-          "x": -400,
-          "y": -240
+          "x": -178.6952621922348,
+          "y": -149.6327302346498
         },
         "scale": 1
       },
@@ -1071,6 +1097,7 @@
   "searchMatchWholeWord": false,
   "replaceEnabled": false,
   "replaceText": "",
+  "pageRuntimeFrontFace": true,
   "breakpoints": {},
   "watchExpressions": [],
   "showComponentDescriptions": true,
@@ -1082,5 +1109,6 @@
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
   "flowZoom": 1,
-  "implementationLanguage": "C"
+  "implementationLanguage": "C",
+  "openDialogDefaultPath": "C:\\Users\\Administrator\\Pictures\\sun3.png"
 }

@@ -2,7 +2,7 @@ name: Build ESP32 Arduino Project
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
   build:
