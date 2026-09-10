@@ -13,7 +13,7 @@ void DisplayManager::setup()
     lv_init();
 
     // Logging
-    lv_log_register_print_cb(log_print);
+    //lv_log_register_print_cb(log_print);
 
     // SPI
     touchscreenSpi.begin(XPT2046_CLK, XPT2046_MISO, XPT2046_MOSI, XPT2046_CS);
