@@ -4,7 +4,8 @@
 #include <WiFi.h>
 #include <esp_now.h>
 #include <esp_wifi.h> 
-#include <ArduinoJson.h>
+#include "SensorData.h"
+
 #define MAX_JSON_SIZE 128
 
 class EspNowManager {
@@ -14,7 +15,7 @@ class EspNowManager {
     static EspNowManager* instance;
 
     void begin();
-    void update();
+    void update(SensorData& sensorData);
 
   private:
     int _buttonPin;

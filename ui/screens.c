@@ -123,6 +123,8 @@ void create_screen_main() {
                     lv_obj_set_pos(obj, 50, -15);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_image_set_src(obj, &img_sun2);
+                    lv_obj_set_style_image_recolor(obj, lv_color_hex(0xffeee6e6), LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_image_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
                 }
             }
         }

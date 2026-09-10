@@ -25,7 +25,7 @@ void EspNowManager::begin() {
   startEspNow();
 }
 
-void EspNowManager::update() {
+void EspNowManager::update(SensorData& sensorData) {
 
   if (digitalRead(_buttonPin) == LOW && !apMode) {
     delay(300);
@@ -45,6 +45,11 @@ void EspNowManager::update() {
     WiFi.mode(WIFI_OFF);
 
     apMode = false;
+  }
+
+  if (dataReady){
+    sensorData.setData(json, dataLen);
+    dataReady = false;
   }
 }
 
@@ -70,7 +75,7 @@ void EspNowManager::startEspNow() {
   Serial.println("Switching to ESP-NOW");
   apMode = false;
 
-  //FULL WiFi RESET (this fixes your error)
+  //FULL WiFi RESET 
   WiFi.disconnect(true, true);   // Disconnect + erase config
   delay(1000);
 

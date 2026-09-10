@@ -1,7 +1,7 @@
 {
   "navigation": {
     "selectedUserPageObject": "[gateway DashBord.eez-project]:/userPages/0",
-    "selectedBitmapObject": "[gateway DashBord.eez-project]:/bitmaps/-1",
+    "selectedBitmapObject": "[gateway DashBord.eez-project]:/bitmaps/0",
     "subnavigationSelectedItems": {}
   },
   "layoutModel": {
@@ -70,7 +70,7 @@
           },
           {
             "type": "border",
-            "selected": 1,
+            "selected": 0,
             "location": "bottom",
             "children": [
               {
@@ -1071,8 +1071,7 @@
         "0": {
           "0": {
             "0": {},
-            "1": {},
-            "$selected": true
+            "1": {}
           },
           "1": {}
         }
@@ -1106,9 +1105,7 @@
   "selectedStylePropertyName": "",
   "lvglPart": "MAIN",
   "lvglState": "DEFAULT",
-  "lvglExpandedPropertiesGroup": [
-    "POSITION AND SIZE"
-  ],
+  "lvglExpandedPropertiesGroup": [],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
   "flowZoom": 1,
