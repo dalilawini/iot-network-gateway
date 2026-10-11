@@ -1,9 +1,18 @@
 #include "DisplayManager.h"
+#include <WiFi.h>
 
 // Global pointer (bridge for static callbacks)
 static DisplayManager* instance = nullptr;
 
-DisplayManager::DisplayManager() {
+// LVGL time base (ms since boot)
+static uint32_t lvgl_tick()
+{
+    return millis();
+}
+
+DisplayManager::DisplayManager(SensorData& sensorData, DeviceRegistry& devices, EspNowManager& espNow)
+    : sensorData(sensorData), devices(devices), espNow(espNow)
+{
     instance = this;
 }
 
@@ -11,6 +20,7 @@ void DisplayManager::setup()
 {
     Serial.println("LVGL Init...");
     lv_init();
+    lv_tick_set_cb(lvgl_tick);
 
     // Logging
     //lv_log_register_print_cb(log_print);
@@ -34,14 +44,21 @@ void DisplayManager::setup()
     lv_indev_set_read_cb(indev, touchscreen_read);
 
     ui_init();
+    weather_ui_init();
+    devices_ui_init(devices, espNow, WiFi.macAddress().c_str());
+    lights_ui_init(devices, espNow);
 
     Serial.println("Display ready");
 }
 
 void DisplayManager::update()
 {
+    updateWheatherScreen();
+    ui_tick();
+    weather_ui_tick();
+    devices_ui_tick();
+    lights_ui_tick();
     lv_timer_handler();
-    lv_tick_inc(5);
     delay(5);
 }
 
@@ -76,4 +93,21 @@ void action_scan(lv_event_t * e) {
     Serial.println("Scan button pressed");
 
     // TODO: your logic here
+}
+void DisplayManager::updateWheatherScreen()
+{
+    if (!sensorData.isDataReady()) return;
+
+    // Every packet goes through the registry (by sender MAC); devices_ui then
+    // sends Outdoor / Indoor readings to the weather screen.
+    DeviceType type = DEVICE_UNKNOWN;
+    if (sensorData.hasTempHum())                 type = DEVICE_TEMP_HUM;
+    else if (sensorData.getSwitchChannels() > 0) type = DEVICE_SWITCH;
+
+    int index = devices.onPacket(sensorData.getMac(), sensorData.getRssi(), type,
+                                 sensorData.getTemperature(), sensorData.getHumidity(),
+                                 sensorData.getSwitchChannels());
+    if (index < 0) return;
+    devices_ui_on_packet(index);
+    if (type == DEVICE_SWITCH) lights_ui_refresh();
 }

@@ -7,6 +7,9 @@ EspNowManager *EspNowManager::instance = nullptr;
 uint8_t EspNowManager::json[MAX_JSON_SIZE];
 uint8_t EspNowManager::dataLen = 0;
 bool EspNowManager::dataReady = false;
+uint8_t EspNowManager::lastMac[6] = {0};
+int8_t EspNowManager::lastRssi = 0;
+volatile uint8_t EspNowManager::sendResult = EspNowManager::SEND_NONE;
 
 EspNowManager::EspNowManager(int buttonPin) {
   _buttonPin = buttonPin;
@@ -27,8 +30,8 @@ void EspNowManager::begin() {
 
 void EspNowManager::update(SensorData& sensorData) {
 
-  if (digitalRead(_buttonPin) == LOW && !apMode) {
-    delay(300);
+  if (pairRequested && !apMode) {
+    pairRequested = false;
     startAP();
   }
 
@@ -45,18 +48,18 @@ void EspNowManager::update(SensorData& sensorData) {
     WiFi.mode(WIFI_OFF);
 
     apMode = false;
+    startEspNow();                   // nobody joined: go back to receiving ESP-NOW
   }
 
-  if (dataReady){
-    sensorData.setData(json, dataLen);
+    sensorData.setSource(lastMac, lastRssi);
+    sensorData.setData(json, dataLen,dataReady);
     dataReady = false;
-  }
 }
 
 void EspNowManager::startAP() {
 
   Serial.println("Starting AP mode");
-  //FULL WiFi RESET (this fixes your error)
+  //FULL WiFi RESET 
   WiFi.disconnect(true, true);   // Disconnect + erase config
   delay(1000);
 
@@ -119,6 +122,15 @@ void EspNowManager::onDataRecv(const esp_now_recv_info *info, const uint8_t *dat
   Serial.printf("Received from: %02X:%02X:%02X:%02X:%02X:%02X\n",
     mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
+    memcpy(lastMac, mac, 6);
+    lastRssi = info->rx_ctrl ? info->rx_ctrl->rssi : 0;
+
+    if (len < 0) return;
+    if (len > MAX_JSON_SIZE - 1) {
+      Serial.printf("Packet too long (%d bytes), truncated to %d\n", len, MAX_JSON_SIZE - 1);
+      len = MAX_JSON_SIZE - 1;
+    }
+
     memcpy(json, data, len);
     json[len] = '\0';
   
@@ -126,6 +138,45 @@ void EspNowManager::onDataRecv(const esp_now_recv_info *info, const uint8_t *dat
      dataReady = true;                        // flag main loop to parse
      Serial.println((char*)json);
 
+}
+
+bool EspNowManager::sendJson(const uint8_t mac[6], const char* json) {
+  if (apMode || pairRequested) return false;      // ESP-NOW is off while pairing
+
+  // Peers are lost whenever startEspNow() re-initialises WiFi, so add on demand
+  if (!esp_now_is_peer_exist(mac)) {
+    esp_now_peer_info_t peer = {};
+    memcpy(peer.peer_addr, mac, 6);
+    peer.channel = 0;                             // current channel
+    peer.ifidx = WIFI_IF_STA;
+    peer.encrypt = false;
+    if (esp_now_add_peer(&peer) != ESP_OK) {
+      Serial.println("ESP-NOW add peer failed");
+      return false;
+    }
+  }
+
+  esp_now_register_send_cb(onDataSent);
+  sendResult = SEND_PENDING;
+  esp_err_t err = esp_now_send(mac, (const uint8_t*)json, strlen(json));
+  if (err != ESP_OK) {
+    sendResult = SEND_FAILED;
+    Serial.printf("ESP-NOW send failed: %d\n", err);
+    return false;
+  }
+  Serial.printf("Sent: %s\n", json);
+  return true;
+}
+
+void EspNowManager::onDataSent(const esp_now_send_info_t *info, esp_now_send_status_t status) {
+  (void)info;
+  sendResult = (status == ESP_NOW_SEND_SUCCESS) ? SEND_OK : SEND_FAILED;
+}
+
+uint32_t EspNowManager::pairingTimeLeft() const {
+  if (!apMode) return pairRequested ? apDuration : 0;
+  unsigned long elapsed = millis() - apStartTime;
+  return elapsed >= apDuration ? 0 : apDuration - elapsed;
 }
 
 void EspNowManager::toggleLed(){
