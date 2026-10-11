@@ -3,6 +3,13 @@ name: Build ESP32 Arduino Project
 on:
   pull_request:
     branches: [ dev ]
+  workflow_dispatch:          # "Run workflow" button in the Actions tab
+
+env:
+  # Same board, partition and versions as the local build (see README)
+  FQBN: esp32:esp32:esp32:PartitionScheme=huge_app
+  ESP32_CORE: esp32:esp32@3.3.7
+  ESP32_INDEX: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
 
 jobs:
   build:
@@ -17,25 +24,30 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
           sudo mv bin/arduino-cli /usr/local/bin/
 
-      - name: Configure Arduino CLI
-        run: |
-          arduino-cli config init
-          arduino-cli core update-index
-
       - name: Install ESP32 core
         run: |
-          arduino-cli core update-index --additional-urls \
-          https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-          arduino-cli core install esp32:esp32 --additional-urls \
-          https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli config init
+          arduino-cli core update-index --additional-urls "$ESP32_INDEX"
+          arduino-cli core install "$ESP32_CORE" --additional-urls "$ESP32_INDEX"
 
       - name: Install libraries
         run: |
           arduino-cli lib update-index
-          arduino-cli lib install "ArduinoJson"
-          arduino-cli lib install lvgl@9.4.0
-          arduino-cli lib install XPT2046_Touchscreen
-          arduino-cli lib install TFT_eSPI
+          arduino-cli lib install "ArduinoJson@7.4.3"
+          arduino-cli lib install "lvgl@9.4.0"
+          arduino-cli lib install "XPT2046_Touchscreen@1.4"
+          arduino-cli lib install "TFT_eSPI@2.5.43"
+
+      - name: Install project configuration (lv_conf.h, TFT_eSPI setup)
+        run: |
+          LIB_DIR="$(arduino-cli config get directories.user)/libraries"
+          # LVGL looks for lv_conf.h next to its own folder
+          cp EEZ/lv_conf.h "$LIB_DIR/lv_conf.h"
+          # TFT_eSPI reads its pin/driver setup from its own folder
+          cp display/TFT_eSPI_User_Setup.h "$LIB_DIR/TFT_eSPI/User_Setup.h"
+
       - name: Compile project
         run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32 --build-property compiler.cpp.extra_flags="-Iwireless -Idisplay -Iui"   -v .
+          arduino-cli compile --fqbn "$FQBN" \
+            --build-property compiler.cpp.extra_flags="-Idisplay -Iui -Iwireless -Isensors" \
+            .

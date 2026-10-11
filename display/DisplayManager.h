@@ -3,10 +3,16 @@
 
 #include <lvgl.h>
 #include "ui.h"
+#include "weather_ui.h"
+#include "devices_ui.h"
+#include "lights_ui.h"
 #include <TFT_eSPI.h>
 #include <XPT2046_Touchscreen.h>
 #include <SPI.h>
 #include "actions.h"
+#include "SensorData.h"
+#include "DeviceRegistry.h"
+#include "EspNowManager.h"
 
 // Pins
 #define XPT2046_IRQ 36
@@ -18,10 +24,12 @@
 #define SCREEN_WIDTH 240
 #define SCREEN_HEIGHT 320
 #define DRAW_BUF_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT / 10 * (LV_COLOR_DEPTH / 8))
+class SensorData;
 
 class DisplayManager {
 public:
-    DisplayManager();  // ✅ FIXED
+    DisplayManager(SensorData& sensorData, DeviceRegistry& devices, EspNowManager& espNow);
+
 
     void setup();
     void update();
@@ -43,6 +51,11 @@ private:
     lv_indev_t *indev;
     uint8_t *draw_buf;
     lv_display_t *disp;
+    SensorData& sensorData;
+    DeviceRegistry& devices;
+    EspNowManager& espNow;
+    void updateWheatherScreen();
+
 };
 
 #endif
