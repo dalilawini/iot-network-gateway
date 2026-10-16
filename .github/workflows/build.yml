@@ -3,9 +3,13 @@ name: Build ESP32 Arduino Project
 on:
   pull_request:
     branches: [ dev ]
+  push:
+    tags: [ 'v*' ]            # v1.0.0, v1.1.0, ... publish a release
   workflow_dispatch:          # "Run workflow" button in the Actions tab
 
-  
+permissions:
+  contents: write
+
 env:
   # Same board, partition and versions as the local build (see README)
   FQBN: esp32:esp32:esp32:PartitionScheme=huge_app
@@ -51,4 +55,24 @@ jobs:
         run: |
           arduino-cli compile --fqbn "$FQBN" \
             --build-property compiler.cpp.extra_flags="-Idisplay -Iui -Iwireless -Isensors" \
+            --output-dir build \
             .
+          # Bootloader + partition table + app in one image, flashed at 0x0 (used by the web installer)
+          cp build/iot-network-gateway.ino.merged.bin build/iot-network-gateway.bin
+          ls -l build
+
+      # Download from the Actions run page (every run, PRs included)
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iot-network-gateway-firmware
+          path: build/iot-network-gateway.bin
+
+      # Permanent public download link (only for v* tags)
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: IoT Network Gateway ${{ github.ref_name }}
+          files: build/iot-network-gateway.bin
+          generate_release_notes: true
