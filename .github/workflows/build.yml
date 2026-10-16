@@ -5,6 +5,7 @@ on:
     branches: [ dev ]
   workflow_dispatch:          # "Run workflow" button in the Actions tab
 
+  
 env:
   # Same board, partition and versions as the local build (see README)
   FQBN: esp32:esp32:esp32:PartitionScheme=huge_app
